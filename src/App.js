@@ -271,7 +271,7 @@ function App() {
                 <p>You secured your ticket!</p>
               </div>
 
-              <a href="https://testnets.opensea.io/assets/mumbai/0x8d5c65040e05d57308ef72199d92c6c55c8fac3e/1" target="_blank"><p>Check it on OpenSea</p></a>
+              <a href="https://opensea.io/assets/matic/0xbf4c805aee2d811d6b9a1b0efe7ca527f231ed41/2" target="_blank"><p>Check it on OpenSea</p></a>
             </div>
           </>
       );
