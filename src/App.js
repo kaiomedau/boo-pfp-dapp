@@ -227,12 +227,11 @@ function App() {
               <img class="current-nft" src={"current-pfp.png"}></img>
 
               <div class="price-status">
+                <h4 class="congratulations">Boo Battle</h4>
                 <p>Second League Ticket</p>
               </div>
 
-              {whitelisted == false 
-              ?(<p class="warning-message">This wallet is <strong>not</strong> whitelisted<br />for the current Boo PFP</p>)
-              :(<button disabled>Mint not Live</button>)}
+              <button disabled>Mint not Live</button>
             </div>
           </>
       );
@@ -259,7 +258,7 @@ function App() {
   }
 
   // OKOKOKOKOKOKOKOKOK
-  if(minted || tokenBalance) {
+  if(minted || parseInt(tokenBalance)) {
     return (
           <>
             <div id="dapp" class="closed">
@@ -287,19 +286,28 @@ function App() {
 
               <img class="current-nft" src={"current-pfp.png"}></img>
 
-              <div class="price-status">
-                <h4 class="congratulations">{ displayPrice }</h4>
-                <p>Is the price of your ticket</p>
-              </div>
+              {whitelisted != false 
+                ? (<div class="price-status">
+                    <h4 class="congratulations">{ displayPrice }</h4>
+                    <p>Is the price of your ticket</p>
+                  </div>)
+                  :(<div class="price-status">
+                      <p><strong>Ticket for Boo Battle 2</strong></p>
+                    </div>)
+              }
 
-              <button disabled= { claimingNft ? 1 : 0 }
+
+              {whitelisted == false 
+              ?(<p class="warning-message">This wallet is <strong>not</strong> whitelisted<br />for the current Boo PFP</p>)
+              :(<button disabled= { claimingNft ? 1 : 0 }
                     onClick={(e) => {
                       e.preventDefault();
                       claimNFTs();
                     }}
                   > 
                   {claimingNft ? "Hunting..." : "Mint your Boo PFP"}
-              </button>
+              </button>)}
+
             </div>
 
             {blockchain.errorMsg !== "" ?(<><div class="warning-message">{blockchain.errorMsg}</div></>):null}
