@@ -1,18 +1,14 @@
 {
-  "CONTRACT_ADDRESS": "0xEd9B49afaC032401F15527C42C6c54931aa6571A",
-  "SCAN_LINK": "https://polygonscan.com/address/0xEd9B49afaC032401F15527C42C6c54931aa6571A#writeContract",
+  "CONTRACT_ADDRESS": "0x8D5C65040e05d57308Ef72199D92C6C55C8Fac3E",
+  "SCAN_LINK": "https://polygonscan.com/address/0x141F881DA9D89402146e16d24e10832D225554F2#writeContract",
   "NETWORK": {
     "NAME": "Polygon",
     "SYMBOL": "Matic",
-    "ID": 137
+    "ID": 80001
   },
-  "NFT_NAME": "Boo Things",
-  "SYMBOL": "BOO",
-  "MAX_SUPPLY": 10000,
-  "WEI_COST": 1,
+  "NFT_NAME": "Boo Things PFP",
+  "SYMBOL": "BPFP",
   "DISPLAY_COST": 0.0,
   "GAS_LIMIT": 1000000,
-  "MARKETPLACE": "OpeanSea",
-  "MARKETPLACE_LINK": "https://opensea.io/collection/boo-things-collection",
-  "SHOW_BACKGROUND": true
+  "CURRENT_ID":1
 }

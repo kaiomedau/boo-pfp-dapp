@@ -88,7 +88,7 @@ button {
 }
 
 button:disabled{
-  background-color: #DBDBDB;
+  background-color: #444;
   cursor: not-allowed;
 }
 
@@ -171,12 +171,14 @@ button:disabled{
 }
 
 .hero {
-  position: absolute;
-  top: 50%;
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
+  /*position: absolute;*/
+  /*top: 50%;*/
+  /*-ms-transform: translateY(-50%);*/
+  /*transform: translateY(-50%);*/
   width: 100%;
   overflow: visible;
+  /*border: solid;*/
+  margin-top: 40px;
 }
 
 .hero h4 {
@@ -278,7 +280,7 @@ button:disabled{
 
 #dapp-container h2 {
   font-size: 40px;
-  margin: 14px 14px 4px 14px;
+  margin: 14px;
 }
 
 #dapp-container h3 {
@@ -320,6 +322,7 @@ button:disabled{
 
   margin: 30px auto auto;
   width: 80%;
+  overflow: visible;
 }
 
 .price-status {
@@ -330,35 +333,10 @@ button:disabled{
 .price-status p {
   margin: 0;
   font-size: 18px;
-  text-transform: lowercase;
 }
 
 small {
   text-transform: lowercase; 
-}
-
-.connect {
-  color: #DBDBDB;
-}
-
-.closed {
-  color: #6ECAFD;
-}
-
-#dapp.closed {
-  border-color: #6ECAFD;
-}
-
-.whitelist {
-  color: #FF87B9;
-}
-
-#dapp.whitelist {
-  border-color: #FF87B9;
-}
-
-.whitelist button:enabled {
-  background-color: #FF87B9; 
 }
 
 .public {
@@ -406,6 +384,12 @@ small {
   text-decoration: underline;
 }
 
+.current-nft {
+  width: 200px;
+  border-radius: 12px;
+  border: solid 4px white;
+}
+
 
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (max-width: 768px) {
@@ -441,6 +425,46 @@ small {
     margin-right: 10px;
   }
 } 
+
+h4.congratulations {
+  margin: 0 0 10px 0;
+}
+
+
+/* Spinner */
+
+.spinner-container {
+  /*width: 100%;*/
+  /*height: 40px;*/
+  /*z-index: 99999;*/
+  text-align: center;
+  /*border: solid red;*/
+  margin-top: 20px;
+  overflow: visible;
+}
+.spinner {
+  margin: auto;
+  border: 2px solid #fff; 
+  width: 32px;
+  height: 32px;
+  display: inline-block;
+  border-radius: 50%;
+  border-right: 2px solid #018df7;
+  animation-name: spin;
+  animation-duration: 900ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.53, 0.21, 0.29, 0.67);
+}
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+  0% { -webkit-transform: rotate(0deg);}
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+
 
 @media only screen and (max-height: 450px) {
   .round_button {

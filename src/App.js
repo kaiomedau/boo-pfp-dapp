@@ -13,25 +13,18 @@ function App() {
   const blockchain = useSelector((state) => state.blockchain);
   const data = useSelector((state) => state.data);
 
-  const [claimingNft, setClaimingNft] = useState(false);
   const [warningFeedback, setWarningFeedback] = useState(``);
   const [successFeedback, setSuccessFeedback] = useState(``);
-  const [displayPrice, setDisplayPrice] = useState(`0 MATIC`);
-  
-  const [totlSupply, setTotlSupply] = useState(0);
-  const [mintLive, setMintLive] = useState(false); // Public sale
-  const [whitelistMintLive, setWhitelistMintLive] = useState(false); // whitelist mint
 
-  const [whitelistCount, setWhitelistCount] = useState(0);
-  const [mintDone, setMintDone] = useState(0);
-  
-  const [lastPrice, setLastPrice] = useState(0);
+  const [mintLive, setMintLive] = useState(false);
+  const [whitelisted, setWhitelisted] = useState(false);
+
+  const [claimingNft, setClaimingNft] = useState(false);
+  const [minted, setMinted] = useState(false);
+  const [tokenBalance, setTokenBalance] = useState(0);
+
+  const [displayPrice, setDisplayPrice] = useState(`0 MATIC`);  
   const [mintPrice, setMintPrice] = useState(0);
-  const [fetchingPrice , setFetchingPrice] = useState(false);
-  const [fetchingCount , setFetchingCount] = useState(0);
-
-  let fetchCount = 0;
-  let fetchLimit = 50;
   
   const [CONFIG, SET_CONFIG] = useState({
     CONTRACT_ADDRESS: "",
@@ -50,13 +43,8 @@ function App() {
     MARKETPLACE: "",
     MARKETPLACE_LINK: "",
     SHOW_BACKGROUND: false,
+    CURRENT_ID:0
   });
-
-  const fetchNewPrice =  () => {
-    setTimeout(function(){ 
-      getNextPrice();
-    }, 1000);
-  }
 
   const removefeedback = () => {
     setTimeout(function(){ 
@@ -66,113 +54,48 @@ function App() {
   }
 
   const getSaleState = () => {
-    blockchain.smartContract.methods.isSaleActive().call().then((receipt) => {
-      setMintLive (receipt);
+    blockchain.smartContract.methods.paused().call().then((receipt) => {
+      setMintLive (!receipt);
+      console.log("Mint paused: " + receipt);
     });    
   }
 
-  const getWhitelistState = () => {
-    blockchain.smartContract.methods.whitelistMintingActive().call().then((receipt) => {
-      setWhitelistMintLive (receipt);
-    });    
-  }
-
-  const getNextPrice = () => {
-    console.log ("🤑 Retriving price for wallet " + fetchCount + "/" + fetchLimit);
-    setFetchingPrice(true);
-    blockchain.smartContract.methods.getMyNextPriceWithAddress(blockchain.account).call().then((receipt) => {
-      console.log("🤑🤑 Next price: " + receipt);
+  const getTokenPrice = () => {
+    blockchain.smartContract.methods.tokenPrice().call().then((receipt) => {
+      console.log("🤑🤑 Token Price: " + receipt);
       
       // Set display price
-      setDisplayPrice(receipt == 0 ? "Free" : Web3B.utils.fromWei(receipt, 'ether') + " MATIC");
-      
-      if(mintLive && parseInt(lastPrice) > 0 && parseInt(lastPrice) >= parseInt(receipt) && fetchCount < fetchLimit){
-        fetchCount++;
-        console.log ("🤑😨 Mint price was the same as before(" + lastPrice + "/" + receipt + ")");
-        // getNextPrice();
-        fetchNewPrice();
-      } else {
-        fetchCount = 0;
-        console.log ("🤑🥰 New mint price set(" + lastPrice + "/" + receipt + ")");
-        setLastPrice(receipt);
-        // Set mint price
-        setMintPrice (receipt);
-        // release mint button
-        setFetchingPrice(false);
-      }
+      setDisplayPrice(receipt == 0 ? "Free" : Web3B.utils.fromWei(receipt, 'ether') + " MATIC + Gas");
+
+      // Set Mint Price
+      setMintPrice (receipt);
     });
   }
 
-  const getWhitelistSlots = () => {
-    console.log ("🔥 Retriving total whitelist slots");
+  const checkWhitelistForAddress = () => {
+    console.log ("🔥 Retriving Whitelist Status for ID: " + String(CONFIG.CURRENT_ID));
     
-    blockchain.smartContract.methods.getWhiteCount(blockchain.account).call().then((receipt) => {
-      console.log("🔥🔥 Whitelist count: " + receipt);
+    blockchain.smartContract.methods.isAddressWhitelistedForTokenId(blockchain.account, CONFIG.CURRENT_ID).call().then((receipt) => {
+      console.log("🔥🔥 Whitelist for token: " + receipt);
       
       // Set mint price
-      setWhitelistCount (receipt);
+      setWhitelisted (receipt);
     });
   }
 
-  const getTotalSupply = () => {
-    console.log ("🔥 Retriving total totalSupply");
-    
-    blockchain.smartContract.methods.totalSupply().call().then((receipt) => {
-      console.log("🔥🔥 Whitelist count: " + receipt);
-      
-      // Set mint price
-      setTotlSupply (receipt);
-    });
-  }
+  const getTokenBalanceForAddress = () => {
+    console.log ("⚫️ Retriving Token Balance");
 
-  const getMintCount = () => {
-    console.log ("⚫️ Retriving mint count");
-
-    blockchain.smartContract.methods.getMintCount(blockchain.account).call().then((receipt) => {
-      console.log("⚫️⚫️ Mint Done: " + receipt);
+    blockchain.smartContract.methods.balanceOf(blockchain.account, CONFIG.CURRENT_ID).call().then((receipt) => {
+      console.log("⚫️⚫️ Token Balance: " + receipt);
       
       // Set Mints done
-      setMintDone (receipt);
+      setTokenBalance (receipt);
     });
   }
 
 
 // Mint
-// Whitelist
-  const claimWhitelistNFT = () => {
-    // Set button as minting
-    setClaimingNft(true);
-
-    blockchain.smartContract.methods.mintWhitelist().send({
-        gasLimit: String(CONFIG.GAS_LIMIT),
-        maxPriorityFeePerGas: null,
-        maxFeePerGas: null, 
-        to: CONFIG.CONTRACT_ADDRESS,
-        from: blockchain.account,
-        value: String(0),
-      })
-      .once("error", (err) => {
-        setWarningFeedback("Oops... Try again later.");
-        setSuccessFeedback(``);
-        removefeedback();
-
-        console.log(err);
-        setClaimingNft(false);
-        getData();
-      })
-      .then((receipt) => {
-        setSuccessFeedback(`👻 Boooooo Yeeeeaaah!`);
-        setWarningFeedback(``);
-        removefeedback();
-
-        console.log(receipt);
-        setClaimingNft(false);
-        dispatch(fetchData(blockchain.account));
-        getData();
-      });
-  };
-
-// Public
   const claimNFTs = () => {
     let totalCostWei = String(mintPrice); // must be WEI cost
     let totalGasLimit = String(CONFIG.GAS_LIMIT);
@@ -207,6 +130,7 @@ function App() {
         removefeedback();
 
         console.log(receipt);
+        setMinted(true);
         setClaimingNft(false);
         dispatch(fetchData(blockchain.account));
         
@@ -222,24 +146,20 @@ function App() {
 
 
   const getData = () => {
-    if (blockchain.account !== "" && blockchain.smartContract !== null) {
+    if (blockchain.account !== "" && blockchain.account !== undefined && blockchain.smartContract !== null) {
       dispatch(fetchData(blockchain.account));
 
       // Check if sale and whitelist are open
       getSaleState();
-      getWhitelistState();
       
       // get whitelist total
-      getWhitelistSlots();
+      checkWhitelistForAddress();
+
+      // get token price
+      getTokenPrice();
 
       // get mint count
-      getMintCount();
-
-      // Update Total Supply
-      getTotalSupply();
-
-      // get next price for this user
-      getNextPrice(); 
+      getTokenBalanceForAddress();
     }
   };
 
@@ -264,57 +184,18 @@ function App() {
 
 
 
-  return (
-      <>
-        <div id="dapp" class="public">
-            <h2>
-              Sold Out!
-            </h2>
-
-            <small class="total_supply"> {CONFIG.MAX_SUPPLY} / {CONFIG.MAX_SUPPLY} 👻</small>
-
-            <div class="bottom_margin">
-              <br />
-              <a href={CONFIG.MARKETPLACE_LINK}>Check on OpenSea</a>
-            </div>
-        </div>
-
-        {blockchain.errorMsg !== "" ?(<><div class="warning-message">{blockchain.errorMsg}</div></>):null}
-        {warningFeedback !== "" ?(<><div class="warning-message">{warningFeedback}</div></>):null}
-        {successFeedback !== "" ?(<><div class="success-message">{successFeedback}</div></>):null}
-      </>
-    );
-
-
-
- 
+  // OKOKOKOKOKOKOKOKOK
   // Check if wallet is connected
-  if(blockchain.account === "" || blockchain.smartContract === null) {
+  if(!blockchain.account || blockchain.account === undefined || blockchain.account === "" || blockchain.smartContract === null) {
     return (
       <>
         <div id="dapp" class="connect">
-            <h2>
-              Boo Things
-            </h2>
+            <h2 class="mint-title">Boo PFP</h2>
 
-            <small class="total_supply"> {totlSupply} / {CONFIG.MAX_SUPPLY} 👻</small>
+            <img class="current-nft" src={"current-pfp.png"}></img>
 
-            <div class="mint-status">
-              <ul class="score-left">
-                <li>0</li>
-                <li class="label">Whitelist Slots</li>
-              </ul>
-
-              <ul class="score-right">
-                <li>0</li>
-                <li class="label">Ghosts Minted</li>
-              </ul>
-            </div>
-            
             <div class="price-status">
-              <h3>Free</h3>
-              <p>Price of your next ghost</p>
-              <small>+ Cents in Gas Fees</small>
+              <p><strong>Ticket for Boo Battle 2</strong><br />Second League</p>
             </div>
 
             <button
@@ -335,190 +216,99 @@ function App() {
     );
   }
 
-
-  // Check for supply limit
-  if(parseInt(totlSupply) >= parseInt(CONFIG.MAX_SUPPLY)) {
-    return (
-      <>
-        <div id="dapp" class="public">
-            <h2>
-              Sold Out!
-            </h2>
-
-            <small class="total_supply"> {totlSupply} / {CONFIG.MAX_SUPPLY} 👻</small>
-
-            <div class="bottom_margin">
-              <a href={CONFIG.MARKETPLACE_LINK}>Check on OpenSea</a>
-            </div>
-        </div>
-
-        {blockchain.errorMsg !== "" ?(<><div class="warning-message">{blockchain.errorMsg}</div></>):null}
-        {warningFeedback !== "" ?(<><div class="warning-message">{warningFeedback}</div></>):null}
-        {successFeedback !== "" ?(<><div class="success-message">{successFeedback}</div></>):null}
-      </>
-    );
-  }
-
-
-
+  // OKOKOKOKOKOKOKOKOK
   // Check if Mint is not Open YET
-  if(!mintLive && !whitelistMintLive){
-
+  if(!mintLive){
     return (
-        
           <>
             <div id="dapp" class="closed">
-              <h2>
-                Mint Not Live
-              </h2>
+              <h2 class="mint-title">Boo PFP</h2>
 
-              <small class="total_supply"> {totlSupply} / {CONFIG.MAX_SUPPLY} 👻</small>
+              <img class="current-nft" src={"current-pfp.png"}></img>
 
-              <div class="mint-status">
-                <ul class="score-left">
-                  <li>{whitelistCount}</li>
-                  <li class="label">Whitelist Slots</li>
-                </ul>
-
-                <ul class="score-right">
-                  <li>{mintDone}</li>
-                  <li class="label">Ghosts Minted</li>
-                </ul>
-              </div>
-              
               <div class="price-status">
-                <h3>{displayPrice}</h3>
-                <p>Price of your next ghost</p>
-                <small>+ Cents in Gas Fees</small>
+                <p>Second League Ticket</p>
               </div>
 
+              {whitelisted == false 
+              ?(<p class="warning-message">This wallet is <strong>not</strong> whitelisted<br />for the current Boo PFP</p>)
+              :(<button disabled>Mint not Live</button>)}
             </div>
-
-            {blockchain.errorMsg !== "" ?(<><div class="warning-message">{blockchain.errorMsg}</div></>):null}
-            {warningFeedback !== "" ?(<><div class="warning-message">{warningFeedback}</div></>):null}
-            {successFeedback !== "" ?(<><div class="success-message">{successFeedback}</div></>):null}
           </>
-        
       );
-
   }
 
+  // OKOKOKOKOKOKOKOKOK
+  if(claimingNft) {
+    return (
+          <>
+            <div id="dapp" class="closed">
+              <h2 class="mint-title">Boo PFP</h2>
+
+              <img class="current-nft" src={"current-pfp.png"}></img>
+
+              <div class="price-status">
+                <h4 class="congratulations">Hunting your Boo</h4>
+                <div class="spinner-container">
+                  <div class="spinner"></div>
+                </div>
+              </div>
+            </div>
+          </>
+      );
+  }
+
+  // OKOKOKOKOKOKOKOKOK
+  if(minted || tokenBalance) {
+    return (
+          <>
+            <div id="dapp" class="closed">
+              <h2 class="mint-title">Boo PFP</h2>
+
+              <img class="current-nft" src={"current-pfp.png"}></img>
+
+              <div class="price-status">
+                <h4 class="congratulations">Congratulations</h4>
+                <p>You secured your ticket!</p>
+              </div>
+
+              <a href="https://testnets.opensea.io/assets/mumbai/0x8d5c65040e05d57308ef72199d92c6c55c8fac3e/1" target="_blank"><p>Check it on OpenSea</p></a>
+            </div>
+          </>
+      );
+  }
+
+  // OKOKOKOKOKOKOKOKOK
   if(mintLive) {
       return (
-        
           <>
-            <div id="dapp" class="public">
-              <h2>
-                Public Sale
-              </h2>
+            <div id="dapp" class="closed">
+              <h2 class="mint-title">Boo PFP</h2>
 
-              <small class="total_supply"> {totlSupply} / {CONFIG.MAX_SUPPLY} 👻</small>
+              <img class="current-nft" src={"current-pfp.png"}></img>
 
-              <div class="mint-status">
-                <ul class="score-left">
-                  <li>{mintDone}</li>
-                  <li class="label">Ghosts Minted</li>
-                </ul>
-
-                <ul class="score-right">
-                  <li>{whitelistCount}</li>
-                  <li class="label">Whitelist Slots</li>
-                </ul>
-              </div>
-              
               <div class="price-status">
-                <h3>{ displayPrice }</h3>
-                <p>Price of your next ghost</p>
-                <small>+ Cents in Gas Fees</small>
+                <h4 class="congratulations">{ displayPrice }</h4>
+                <p>Is the price of your ticket</p>
               </div>
 
-              {
-                !fetchingPrice ? 
-                (
-                  <button disabled= { claimingNft ? 1 : 0 }
+              <button disabled= { claimingNft ? 1 : 0 }
                     onClick={(e) => {
                       e.preventDefault();
                       claimNFTs();
                     }}
                   > 
-                  {claimingNft ? "Hunting..." : "Mint your Boo"}
-                  </button>
-                ) : (
-                  <button disabled="1"> 
-                    Fetching Price...
-                  </button>
-                )
-              }
+                  {claimingNft ? "Hunting..." : "Mint your Boo PFP"}
+              </button>
             </div>
 
             {blockchain.errorMsg !== "" ?(<><div class="warning-message">{blockchain.errorMsg}</div></>):null}
             {warningFeedback !== "" ?(<><div class="warning-message">{warningFeedback}</div></>):null}
             {successFeedback !== "" ?(<><div class="success-message">{successFeedback}</div></>):null}
           </>
-        
-      );
-  }
-  
-  if(whitelistMintLive) {
-      console.log("🚨 Whitelist mint");
-      return (
-        
-          <>
-            <div id="dapp" class="whitelist">
-              <h2>
-                Whitelist
-              </h2>
-
-              <small class="total_supply"> {totlSupply} / {CONFIG.MAX_SUPPLY} 👻</small>
-
-              <div class="mint-status">
-                <ul class="score-left">
-                  <li>{mintDone}</li>
-                  <li class="label">Ghosts Minted</li>
-                </ul>
-
-                <ul class="score-right">
-                  <li>{whitelistCount}</li>
-                  <li class="label">Whitelist Slots</li>
-                </ul>
-              </div>
-              
-              <div class="price-status">
-                <h3>{ displayPrice }</h3>
-                <p>Price of your next ghost</p>
-                <small>+ Cents in Gas Fees</small>
-              </div>
-
-              {
-                parseInt(mintDone) < parseInt(whitelistCount) ? 
-                (
-                  <button disabled= { claimingNft ? 1 : 0 }
-                  onClick={(e) => {
-                    e.preventDefault();
-                    claimWhitelistNFT();
-                    getData();
-                  }}
-                  > 
-                  {claimingNft ? "Hunting..." : "Mint your Boo"}
-                  </button>
-                ) : (
-                  <button disabled="1"> 
-                    Out of slots
-                  </button>
-                )
-              }
-
-          </div>
-
-          {blockchain.errorMsg !== "" ?(<><div class="warning-message">{blockchain.errorMsg}</div></>):null}
-          {warningFeedback !== "" ?(<><div class="warning-message">{warningFeedback}</div></>):null}
-          {successFeedback !== "" ?(<><div class="success-message">{successFeedback}</div></>):null}
-        </>
-        
       );
   }
 
-  
 }
 
 export default App;
