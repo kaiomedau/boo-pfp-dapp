@@ -268,7 +268,7 @@ function App() {
 
               <div class="price-status">
                 <h4 class="congratulations">Congratulations</h4>
-                <p>You just minted your {CONFIG.CURRENT_NFT_NAME} PFP!</p>
+                <p>You have minted your {CONFIG.CURRENT_NFT_NAME} PFP!</p>
               </div>
 
               <a href={"https://opensea.io/assets/matic/0xbf4c805aee2d811d6b9a1b0efe7ca527f231ed41/" + CONFIG.CURRENT_ID} target="_blank"><p>Check it on OpenSea</p></a>
@@ -289,7 +289,7 @@ function App() {
               {whitelisted != false 
                 ? (<div class="price-status">
                     <h4 class="congratulations">{ displayPrice }</h4>
-                    <p>Is the price of this PFP</p>
+                    <p>Is the price of this NFT</p>
                   </div>)
                   :(<div class="price-status">
                       <h4 class="congratulations">{CONFIG.CURRENT_NFT_NAME}</h4>
