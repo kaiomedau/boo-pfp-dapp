@@ -43,7 +43,8 @@ function App() {
     MARKETPLACE: "",
     MARKETPLACE_LINK: "",
     SHOW_BACKGROUND: false,
-    CURRENT_ID:0
+    CURRENT_ID:0,
+    CURRENT_NFT_NAME: "",
   });
 
   const removefeedback = () => {
@@ -195,7 +196,7 @@ function App() {
             <img class="current-nft" src={"current-pfp.png"}></img>
 
             <div class="price-status">
-              <p><strong>Ticket for Boo Battle 2</strong><br />Second League</p>
+              <h4 class="congratulations">{CONFIG.CURRENT_NFT_NAME}</h4>
             </div>
 
             <button
@@ -227,8 +228,7 @@ function App() {
               <img class="current-nft" src={"current-pfp.png"}></img>
 
               <div class="price-status">
-                <h4 class="congratulations">Boo Battle</h4>
-                <p>Second League Ticket</p>
+                <h4 class="congratulations">{CONFIG.CURRENT_NFT_NAME}</h4>
               </div>
 
               <button disabled>Mint not Live</button>
@@ -268,10 +268,10 @@ function App() {
 
               <div class="price-status">
                 <h4 class="congratulations">Congratulations</h4>
-                <p>You secured your ticket!</p>
+                <p>You just minted your {CONFIG.CURRENT_NFT_NAME} PFP!</p>
               </div>
 
-              <a href="https://opensea.io/assets/matic/0xbf4c805aee2d811d6b9a1b0efe7ca527f231ed41/2" target="_blank"><p>Check it on OpenSea</p></a>
+              <a href={"https://opensea.io/assets/matic/0xbf4c805aee2d811d6b9a1b0efe7ca527f231ed41/" + CONFIG.CURRENT_ID} target="_blank"><p>Check it on OpenSea</p></a>
             </div>
           </>
       );
@@ -289,16 +289,16 @@ function App() {
               {whitelisted != false 
                 ? (<div class="price-status">
                     <h4 class="congratulations">{ displayPrice }</h4>
-                    <p>Is the price of your ticket</p>
+                    <p>Is the price of this PFP</p>
                   </div>)
                   :(<div class="price-status">
-                      <p><strong>Ticket for Boo Battle 2</strong></p>
+                      <h4 class="congratulations">{CONFIG.CURRENT_NFT_NAME}</h4>
                     </div>)
               }
 
 
               {whitelisted == false 
-              ?(<p class="warning-message">This wallet is <strong>not</strong> whitelisted<br />for the current Boo PFP</p>)
+              ?(<p class="warning-message">This wallet is <strong>not</strong> whitelisted<br />for the current {CONFIG.CURRENT_NFT_NAME} PFP</p>)
               :(<button disabled= { claimingNft ? 1 : 0 }
                     onClick={(e) => {
                       e.preventDefault();
