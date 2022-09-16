@@ -243,7 +243,7 @@ function App() {
                 <h4 class="congratulations">{CONFIG.CURRENT_NFT_NAME}</h4>
               </div>
 
-              <button disabled>Mint not Live</button>
+              <button disabled>Mint Closed</button>
             </div>
           </>
       );
