@@ -25,6 +25,8 @@ function App() {
 
   const [displayPrice, setDisplayPrice] = useState(`0 MATIC`);  
   const [mintPrice, setMintPrice] = useState(0);
+  const [currentTokenID, setCurrentTokenID] = useState(0);
+
   
   const [CONFIG, SET_CONFIG] = useState({
     CONTRACT_ADDRESS: "",
@@ -53,6 +55,13 @@ function App() {
       setWarningFeedback(``);
     }, 5000);
   }
+
+  const getCurrentTokenID = () => {
+    blockchain.smartContract.methods.currentTokenID().call().then((receipt) => {
+      setCurrentTokenID (receipt);
+      console.log("Current Token ID: " + receipt);
+    });    
+  }  
 
   const getSaleState = () => {
     blockchain.smartContract.methods.paused().call().then((receipt) => {
@@ -150,6 +159,9 @@ function App() {
     if (blockchain.account !== "" && blockchain.account !== undefined && blockchain.smartContract !== null) {
       dispatch(fetchData(blockchain.account));
 
+      // Get actual token
+      getCurrentTokenID();
+
       // Check if sale and whitelist are open
       getSaleState();
       
@@ -193,7 +205,7 @@ function App() {
         <div id="dapp" class="connect">
             <h2 class="mint-title">Boo PFP</h2>
 
-            <img class="current-nft" src={"current-pfp.png"}></img>
+            <img class="current-nft" src={"cover-pfp.png"}></img>
 
             <div class="price-status">
               <h4 class="congratulations">{CONFIG.CURRENT_NFT_NAME}</h4>
@@ -219,7 +231,7 @@ function App() {
 
   // OKOKOKOKOKOKOKOKOK
   // Check if Mint is not Open YET
-  if(!mintLive){
+  if(currentTokenID == 0){
     return (
           <>
             <div id="dapp" class="closed">
