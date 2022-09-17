@@ -26,6 +26,9 @@ function App() {
   const [displayPrice, setDisplayPrice] = useState(`0 MATIC`);  
   const [mintPrice, setMintPrice] = useState(0);
   const [currentTokenID, setCurrentTokenID] = useState(0);
+  
+  const [donating, setDonating] = useState(false);
+  const [donationPrice, setDonationPrice] = useState(0);
 
   
   const [CONFIG, SET_CONFIG] = useState({
@@ -72,14 +75,14 @@ function App() {
 
   const getTokenPrice = () => {
     blockchain.smartContract.methods.tokenPrice().call().then((receipt) => {
-      console.log("🤑🤑 Token Price: " + receipt);
-      
-      // Set display price
-      setDisplayPrice(receipt == 0 ? "Free" : Web3B.utils.fromWei(receipt, 'ether') + " MATIC + Gas");
-
-      // Set Mint Price
+      setDisplayPrice(receipt == 0 ? "Free + Gas" : Web3B.utils.fromWei(receipt, 'ether') + " MATIC + Gas");
       setMintPrice (receipt);
     });
+  }
+  
+  function handleDonation(dValue) {
+    var weiAmout = dValue * 1e18;
+    setDonationPrice(weiAmout, 'ether');
   }
 
   const checkWhitelistForAddress = () => {
@@ -107,14 +110,13 @@ function App() {
 
 // Mint
   const claimNFTs = () => {
-    let totalCostWei = String(mintPrice); // must be WEI cost
+    setClaimingNft(true);
+    
+    let totalCostWei = String(mintPrice + donationPrice); // must be WEI cost
     let totalGasLimit = String(CONFIG.GAS_LIMIT);
     console.log("Cost: ", totalCostWei);
     console.log("Gas limit: ", totalGasLimit);
     
-    // Change button status
-    setClaimingNft(true);
-
     blockchain.smartContract.methods
       .mint()
       .send({
@@ -229,6 +231,7 @@ function App() {
     );
   }
 
+
   // OKOKOKOKOKOKOKOKOK
   // Check if Mint is not Open YET
   if(currentTokenID == 0){
@@ -308,17 +311,25 @@ function App() {
                     </div>)
               }
 
-
               {whitelisted == false 
-              ?(<p class="warning-message">This wallet is <strong>not</strong> whitelisted<br />for the current {CONFIG.CURRENT_NFT_NAME} PFP</p>)
-              :(<button disabled= { claimingNft ? 1 : 0 }
-                    onClick={(e) => {
-                      e.preventDefault();
-                      claimNFTs();
-                    }}
-                  > 
-                  {claimingNft ? "Hunting..." : "Mint your Boo PFP"}
-              </button>)}
+              ? (
+                <p class="warning-message">This wallet is <strong>not</strong> whitelisted<br />for the current PFP</p>
+                
+              ) : (
+              <>
+                <div class="donation">
+                {donating == true ? (
+                  <input id="donation-value" placeholder="Enter Matic Ammount" type="number" min="0" onChange={e => handleDonation(e.target.value)}/>
+                ):(
+                  <button onClick= {(e) => {setDonating(true);}} >I want to donate to help the project</button>
+                )}
+                </div>
+
+                <button disabled= { claimingNft ? 1 : 0 } onClick={(e) => { e.preventDefault();  claimNFTs(); }}> 
+                    {claimingNft ? "Hunting..." : "Mint your Boo PFP"}
+                </button>
+              </>
+              )}
 
             </div>
 

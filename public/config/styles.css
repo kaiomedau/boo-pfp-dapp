@@ -1,4 +1,4 @@
-html, body {
+html, body, input {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -326,7 +326,7 @@ button:disabled{
 }
 
 .price-status {
-  margin: 15px auto 30px auto;
+  margin: 15px auto 20px auto;
 }
 
 
@@ -427,9 +427,32 @@ small {
 } 
 
 h4.congratulations {
-  margin: 0 0 10px 0;
+  margin: 0px;
 }
 
+.donation button {
+  background: none;
+  color: #000;
+  font-size: 16px;
+  text-transform: inherit;
+  text-decoration: underline;
+  margin-bottom: 20px;
+}
+
+.donation input {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.75);
+  border: solid 2px #6ECAFD;
+  width: 280px;
+  height: 44px;
+  font-size: 22px;
+  color: #666;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+::placeholder {
+  color: #c0c0c0;
+}
 
 /* Spinner */
 
@@ -462,36 +485,4 @@ h4.congratulations {
 @keyframes spin {
   0% { -webkit-transform: rotate(0deg);}
   100% { -webkit-transform: rotate(360deg); }
-}
-
-
-
-@media only screen and (max-height: 450px) {
-  .round_button {
-    display: none;
-  } 
-}
-
-@keyframes slide {
-  0% {
-    transform: translatex(0);
-  }
-  50% {
-    transform: translatex(-41%);
-  }
-  100% {
-    transform: translatex(0);
-  }
-}
-
-@keyframes float {
-  0% {
-    transform: translatey(0px);
-  }
-  50% {
-    transform: translatey(-10px);
-  }
-  100% {
-    transform: translatey(0px);
-  }
 }
