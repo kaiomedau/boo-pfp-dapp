@@ -188,7 +188,7 @@ function App() {
         <div id="dapp" class="connect">
             <h2 class="mint-title">Boo PFP</h2>
 
-            <img class="current-nft" src={"cover-pfp.png"}></img>
+            <img class="current-nft" src={"current-pfp.png"}></img>
 
             <div class="price-status">
               <h4 class="congratulations">{CONFIG.CURRENT_NFT_NAME}</h4>

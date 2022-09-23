@@ -46,5 +46,4 @@ export const fetchData = () => {
   //     dispatch(fetchDataFailed("Could not load data from contract."));
   //   }
   };
-
 };
