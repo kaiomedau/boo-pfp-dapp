@@ -61,17 +61,10 @@ function App() {
 
   const getCurrentTokenID = () => {
     blockchain.smartContract.methods.currentTokenID().call().then((receipt) => {
-      setCurrentTokenID (receipt);
+      setCurrentTokenID (parseInt(receipt) > 0 ? parseInt(receipt) : 0);
       console.log("Current Token ID: " + receipt);
     });    
   }  
-
-  const getSaleState = () => {
-    blockchain.smartContract.methods.paused().call().then((receipt) => {
-      setMintLive (!receipt);
-      console.log("Mint paused: " + receipt);
-    });    
-  }
 
   const getTokenPrice = () => {
     blockchain.smartContract.methods.tokenPrice().call().then((receipt) => {
@@ -150,13 +143,6 @@ function App() {
       });
   };
 
-
-// Checa quantos WL tem disponível
-// Checa quantos WL já mintou
-  // Checa se ainda tem Wl após o mint
-  // Checa o preço antes de cada mint
-
-
   const getData = () => {
     if (blockchain.account !== "" && blockchain.account !== undefined && blockchain.smartContract !== null) {
       dispatch(fetchData(blockchain.account));
@@ -164,9 +150,6 @@ function App() {
       // Get actual token
       getCurrentTokenID();
 
-      // Check if sale and whitelist are open
-      getSaleState();
-      
       // get whitelist total
       checkWhitelistForAddress();
 
@@ -198,8 +181,6 @@ function App() {
   }, [blockchain.account]);
 
 
-
-  // OKOKOKOKOKOKOKOKOK
   // Check if wallet is connected
   if(!blockchain.account || blockchain.account === undefined || blockchain.account === "" || blockchain.smartContract === null) {
     return (
@@ -232,8 +213,6 @@ function App() {
   }
 
 
-  // OKOKOKOKOKOKOKOKOK
-  // Check if Mint is not Open YET
   if(currentTokenID == 0){
     return (
           <>
@@ -252,7 +231,7 @@ function App() {
       );
   }
 
-  // OKOKOKOKOKOKOKOKOK
+
   if(claimingNft) {
     return (
           <>
@@ -272,7 +251,6 @@ function App() {
       );
   }
 
-  // OKOKOKOKOKOKOKOKOK
   if(minted || parseInt(tokenBalance)) {
     return (
           <>
@@ -292,8 +270,7 @@ function App() {
       );
   }
 
-  // OKOKOKOKOKOKOKOKOK
-  if(mintLive) {
+  if(currentTokenID > 0) {
       return (
           <>
             <div id="dapp" class="closed">
@@ -313,7 +290,7 @@ function App() {
 
               {whitelisted == false 
               ? (
-                <p class="warning-message">This wallet is <strong>not</strong> whitelisted<br />for the current PFP</p>
+                <p class="not-whitelisted">This wallet is <strong>not</strong> whitelisted<br />for the current PFP</p>
                 
               ) : (
               <>

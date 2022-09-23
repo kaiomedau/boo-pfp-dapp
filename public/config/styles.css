@@ -358,6 +358,16 @@ small {
   color: red;
 }
 
+.not-whitelisted {
+  display: block;
+    width: 80%;
+    padding: 10px 0;
+    color: #FE7DAF;
+    border: solid #FE7DAF;
+    margin: 0px auto 14px auto;
+    border-radius: 12px;
+}
+
 .success-message {
   color: green;
 }

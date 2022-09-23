@@ -9,8 +9,8 @@
   "NFT_NAME": "Boo Things PFP",
   "SYMBOL": "BPFP",
   "DISPLAY_COST": 0.0,
-  "GAS_LIMIT": 1000000,
+  "GAS_LIMIT": 1500000,
   
-  "CURRENT_ID":3,
-  "CURRENT_NFT_NAME":"Next event coming soon"
+  "CURRENT_ID":4,
+  "CURRENT_NFT_NAME":"Kleber Boo"
 }
