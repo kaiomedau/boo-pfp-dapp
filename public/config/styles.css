@@ -445,8 +445,11 @@ h4.congratulations {
   color: #000;
   font-size: 16px;
   text-transform: inherit;
-  text-decoration: underline;
-  margin-bottom: 20px;
+  margin: 0 auto 10px !important;
+  border: solid 2px !important;
+  border-radius: 8px !important;
+  width: 280px !important;
+  height: 44px;
 }
 
 .donation input {
