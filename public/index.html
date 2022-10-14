@@ -7,68 +7,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <link rel="stylesheet" href="%PUBLIC_URL%/config/styles.css" />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo512.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com"> 
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500&display=swap" rel="stylesheet">
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+
     <title>Boo Things PFP Collection</title>
     <meta name="description" content="An NFT collection to reward engagement" />
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XLTEWWSQ8Q"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-XLTEWWSQ8Q"
+    ></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
-      gtag('config', 'G-XLTEWWSQ8Q');
+      gtag("config", "G-XLTEWWSQ8Q");
     </script>
   </head>
   <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
 
-  <noscript>You need to enable JavaScript to run this app.</noscript>
-
-  <div class="session grad_green h_100">
-    <header>
-      <a href="https://boothings.app">
-        <div class="logo"></div>
-      </a>
-      
-      <div class="socials">
-        <a href="https://www.tiktok.com/@boothingsnft" target="_blank">
-          <img src="%PUBLIC_URL%/tiktok.svg" alt="Boo Thinhgs TikTok">
+    <div class="session grad_green h_100">
+      <header>
+        <a href="https://boothings.app">
+          <div class="logo"></div>
         </a>
 
-        <a href="https://twitter.com/boothingsnft" target="_blank">
-          <img src="%PUBLIC_URL%/twitter.svg" alt="Boo Thinhgs Twitter">
-        </a>
+        <div class="socials">
+          <a href="https://www.tiktok.com/@boothingsnft" target="_blank">
+            <img src="%PUBLIC_URL%/tiktok.svg" alt="Boo Thinhgs TikTok" />
+          </a>
 
-        <a href="https://discord.gg/EJy9NKh3gH" target="_blank">
-          <img src="%PUBLIC_URL%/discord.svg" alt="Boo Thinhgs Discord">
-        </a>
+          <a href="https://twitter.com/boothingsnft" target="_blank">
+            <img src="%PUBLIC_URL%/twitter.svg" alt="Boo Thinhgs Twitter" />
+          </a>
 
-        <a href="https://opensea.io/collection/boo-things-pfp" target="_blank">
-          <img src="%PUBLIC_URL%/opensea-icon.svg" alt="Boo Thinhgs on OpenSea">
+          <a href="https://discord.gg/EJy9NKh3gH" target="_blank">
+            <img src="%PUBLIC_URL%/discord.svg" alt="Boo Thinhgs Discord" />
+          </a>
+
+          <a
+            href="https://opensea.io/collection/boo-things-pfp"
+            target="_blank"
+          >
+            <img
+              src="%PUBLIC_URL%/opensea-icon.svg"
+              alt="Boo Thinhgs on OpenSea"
+            />
+          </a>
+        </div>
+      </header>
+
+      <div id="contract">
+        Boo PFP Smart Contract
+        <br />
+        <a
+          href="https://polygonscan.com/address/0xbF4C805aEe2d811d6b9A1b0EfE7CA527f231Ed41"
+          target="_blank"
+          title="Boo PFP Smart Contract"
+        >
+          0xbF4C805aEe2d811d6b9A1b0EfE7CA527f231Ed41
         </a>
       </div>
-    </header>
 
-    <div id="contract">
-      Boo PFP Smart Contract
-      <br />
-      <a href="https://polygonscan.com/address/0xbF4C805aEe2d811d6b9A1b0EfE7CA527f231Ed41" target="_blank" title="Boo PFP Smart Contract">
-        0xbF4C805aEe2d811d6b9A1b0EfE7CA527f231Ed41
-      </a>
-    </div>
-
-    <div class="hero">
+      <div class="hero">
         <div id="dapp-container"></div>
+      </div>
     </div>
-
-  </div>
-
   </body>
 </html>
