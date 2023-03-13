@@ -120,7 +120,8 @@ function App() {
   const claimNFTs = () => {
     setClaimingNft(true);
 
-    let totalCostWei = String(mintPrice + donationPrice); // must be WEI cost
+    let sum = parseFloat(mintPrice) + parseFloat(donationPrice);
+    let totalCostWei = String(sum); // must be WEI cost
     let totalGasLimit = String(CONFIG.GAS_LIMIT);
     console.log("Cost: ", totalCostWei);
     console.log("Gas limit: ", totalGasLimit);
